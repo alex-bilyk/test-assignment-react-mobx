@@ -6,6 +6,7 @@ class BooksService {
   }
 
   getAll = async () => this.http.get("/");
+  getPrivate = async ()          => this.http.get("/private"); 
   add = async (book) => this.http.post("/books", book);
 }
 

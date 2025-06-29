@@ -1,5 +1,9 @@
+import { BooksController } from "../features/books/controller/BooksController";
+
 export class RootStore {
-  // global stores could be added here later
+  constructor() {
+    this.booksCtrl = new BooksController();
+  }
 }
 
 export const rootStore = new RootStore();
