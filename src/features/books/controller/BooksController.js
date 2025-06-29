@@ -19,14 +19,18 @@ export class BooksController {
 
   fetchAll = async () => {
     this.loading = true;
-    const data =
-      this.mode === "private"
-        ? await booksService.getPrivate()
-        : await booksService.getAll();
 
-    // when we have private list we also know its size
-    const privateList =
-      this.mode === "private" ? data : await booksService.getPrivate();
+    const booksPromise =
+      this.mode === "private"
+        ? booksService.getPrivate()
+        : booksService.getAll();
+
+    const privateListPromise = booksService.getPrivate();
+
+    const [data, privateList] = await Promise.all([
+      booksPromise,
+      privateListPromise
+    ]);
 
     runInAction(() => {
       this.books = data;
@@ -35,8 +39,13 @@ export class BooksController {
     });
   };
 
-  add = async (book) => {
-    await booksService.add(book);
+  add = async ({ name, author }) => {
+    if (!name.trim() || !author.trim()) {
+      alert("Name and author are required");
+      return;
+    }
+
+    await booksService.add({ name, author });
     await this.fetchAll();
   };
 }

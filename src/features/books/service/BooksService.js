@@ -5,9 +5,10 @@ class BooksService {
     this.http = new ApiGateway();
   }
 
-  getAll = async () => this.http.get("/");
-  getPrivate = async ()          => this.http.get("/private"); 
-  add = async (book) => this.http.post("/books", book);
+  getAll = () => this.http.get("/"); // GET https://.../books/{user}/
+  getPrivate = () => this.http.get("/private"); // GET https://.../books/{user}/private
+  add = (book) => this.http.post("/", book); // POST https://.../books/{user}/
+  reset = () => this.http.put("/reset"); // PUT https://.../books/{user}/reset
 }
 
 export const booksService = new BooksService();

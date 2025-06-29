@@ -1,19 +1,28 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { StoreCtx } from "../../../providers/StoreProvider";
 
 export const BooksListView = observer(() => {
   const { booksCtrl } = useContext(StoreCtx);
 
+  const [name, setName] = useState("");
+  const [author, setAuthor] = useState("");
+
   useEffect(() => {
     booksCtrl.fetchAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [booksCtrl]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    booksCtrl.add({ name, author });
+    setName("");
+    setAuthor("");
+  };
 
   if (booksCtrl.loading) return <p>Loading…</p>;
 
   return (
-    <div>
+    <div style={{ padding: 16 }}>
       {/* mode switch */}
       <div style={{ marginBottom: 12 }}>
         <button
@@ -38,13 +47,22 @@ export const BooksListView = observer(() => {
         </div>
       ))}
 
-      {/* quick add (still mocked) */}
-      <button
-        style={{ marginTop: 12 }}
-        onClick={() => booksCtrl.add({ name: "My Test Book", author: "Me" })}
-      >
-        Add
-      </button>
+      {/* form */}
+      <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
+        <input
+          placeholder="Book name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          placeholder="Author"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+        <button type="submit" style={{ marginLeft: 8 }}>
+          Add book
+        </button>
+      </form>
     </div>
   );
 });
