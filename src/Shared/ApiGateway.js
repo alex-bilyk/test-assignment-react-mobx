@@ -1,33 +1,32 @@
 import { API_BASE } from "./config";
 
+function asJsonSafe(res) {
+  return res.status === 204 ? null : res.json();
+};
+
+function check(res) {
+  if (!res.ok) {
+    const err = new Error(`HTTP ${res.status} - ${res.statusText}`);
+    err.status = res.status;
+
+    throw err;
+  }
+
+  return res;
+};
+
 export default class ApiGateway {
-  get = async (path) => {
-    const response = await fetch(`${API_BASE}${path}`);
-    const dto = response.json();
-    return dto;
-  };
-  post = async (path, payload) => {
-    const response = await fetch(`${API_BASE}${path}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-    const dto = response.json();
-    return dto;
-  };
-  put = async (path, payload = null) => {
+  request = async (method, path, payload) => {
     const res = await fetch(`${API_BASE}${path}`, {
-      method: "PUT",
+      method,
       headers: { "Content-Type": "application/json" },
       body: payload ? JSON.stringify(payload) : null
-    });
+    }).then(check);
 
-    try {
-      return await res.json();
-    } catch {
-      return null;
-    }
+    return asJsonSafe(res);
   };
+
+  get = (path) => this.request("GET", path);
+  post = (path, payload) => this.request("POST", path, payload);
+  put = (path, payload = null) => this.request("PUT", path, payload);
 }

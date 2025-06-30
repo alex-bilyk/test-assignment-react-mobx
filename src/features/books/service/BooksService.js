@@ -1,14 +1,14 @@
-import ApiGateway from "../../../Shared/ApiGateway";
+import ApiGateway from "../../../shared/ApiGateway";
 
 class BooksService {
   constructor() {
     this.http = new ApiGateway();
   }
 
-  getAll = () => this.http.get("/"); // GET https://.../books/{user}/
-  getPrivate = () => this.http.get("/private"); // GET https://.../books/{user}/private
-  add = (book) => this.http.post("/", book); // POST https://.../books/{user}/
-  reset = () => this.http.put("/reset"); // PUT https://.../books/{user}/reset
+  getAll = () => this.http.get("/");
+  getPrivate = () => this.http.get("/private");
+  add = (book) => this.http.post("/", book);
+  reset = () => this.http.put("/reset");
 }
 
 export const booksService = new BooksService();

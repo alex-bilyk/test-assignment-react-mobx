@@ -40,6 +40,12 @@ export const BooksListView = observer(() => {
         </button>
       </div>
 
+      {booksCtrl.error && (
+        <div style={{ color: "red", marginBottom: 8 }}>
+          {booksCtrl.error}
+        </div>
+      )}
+
       {/* list */}
       {booksCtrl.books.map((b, i) => (
         <div key={i}>
