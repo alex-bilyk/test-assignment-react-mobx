@@ -5,9 +5,17 @@ import "./Header.css";
 
 export const Header = observer(() => {
   const { booksCtrl } = useContext(StoreCtx);
+
   return (
     <header className="sticky">
       <strong>Your books: {booksCtrl.privateCount}</strong>
+      <button
+        style={{ float: "right" }}
+        onClick={booksCtrl.reset}
+        disabled={booksCtrl.loading}
+      >
+        Reset All
+      </button>
     </header>
   );
 });

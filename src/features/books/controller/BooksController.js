@@ -48,4 +48,10 @@ export class BooksController {
     await booksService.add({ name, author });
     await this.fetchAll();
   };
+
+  reset = async () => {
+    this.loading = true;
+    await booksService.reset();
+    await this.fetchAll();
+  };
 }
