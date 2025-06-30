@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
+
+import { MODE } from "../../../shared/constants";
 import { StoreCtx } from "../../../providers/StoreProvider";
 
 export const BooksListView = observer(() => {
@@ -26,15 +28,15 @@ export const BooksListView = observer(() => {
       {/* mode switch */}
       <div style={{ marginBottom: 12 }}>
         <button
-          disabled={booksCtrl.mode === "all"}
-          onClick={() => booksCtrl.setMode("all")}
+          disabled={booksCtrl.mode === MODE.ALL}
+          onClick={() => booksCtrl.setMode(MODE.ALL)}
         >
           All books
         </button>
         <button
           style={{ marginLeft: 8 }}
-          disabled={booksCtrl.mode === "private"}
-          onClick={() => booksCtrl.setMode("private")}
+          disabled={booksCtrl.mode === MODE.PRIVATE}
+          onClick={() => booksCtrl.setMode(MODE.PRIVATE)}
         >
           Private books
         </button>

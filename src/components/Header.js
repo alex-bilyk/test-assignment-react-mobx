@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
+
 import { StoreCtx } from "../providers/StoreProvider";
 import "./Header.css";
 
@@ -10,7 +11,6 @@ export const Header = observer(() => {
     <header className="sticky">
       <strong>Your books: {booksCtrl.privateCount}</strong>
       <button
-        style={{ float: "right" }}
         onClick={booksCtrl.reset}
         disabled={booksCtrl.loading}
       >

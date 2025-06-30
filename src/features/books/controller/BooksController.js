@@ -1,14 +1,16 @@
 import { makeAutoObservable, runInAction } from "mobx";
+
+import { MODE } from "../../../shared/constants";
 import { booksService } from "../service/BooksService";
 
-const clean = (str) => str.replace(/[<>]/g, "");
+const cleanXSS = (str) => str.replace(/[<>]/g, "");
 
 export class BooksController {
   books = [];
   privateCount = 0;
   loading = false;
   error = null;
-  mode = "all"; // 'all' | 'private'
+  mode = MODE.ALL; // 'all' | 'private'
 
   constructor() {
     makeAutoObservable(this);
@@ -26,7 +28,7 @@ export class BooksController {
     this.error = null;
 
     try {
-      const dataPromise = this.mode === "private"
+      const dataPromise = this.mode === MODE.PRIVATE
         ? booksService.getPrivate()
         : booksService.getAll();
       const privatePromise = booksService.getPrivate();
@@ -38,8 +40,8 @@ export class BooksController {
 
       runInAction(() => {
         this.books = data.map((b) => ({
-          name: clean(b.name),
-          author: clean(b.author)
+          name: cleanXSS(b.name),
+          author: cleanXSS(b.author)
         }));
         this.privateCount = privateList.length;
         this.loading = false;
@@ -58,7 +60,7 @@ export class BooksController {
     }
 
     try {
-      await booksService.add({ name: clean(name), author: clean(author) });
+      await booksService.add({ name: cleanXSS(name), author: cleanXSS(author) });
       await this.fetchAll();
     } catch (err) {
       runInAction(() => {
