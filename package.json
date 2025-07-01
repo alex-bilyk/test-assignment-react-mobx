@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "How we create a fast-test architecture from scratch.",
   "keywords": [],
+  "author": "Oleksandr Bilyk <bilyksaha01@gmail.com>",
   "main": "src/index.js",
   "scripts": {
     "start": "react-scripts start",
