@@ -1,11 +1,14 @@
-.sticky {
-  position: sticky;
-  top: 0;
-  background: #fff;
-  padding: 8px 16px;
-  border-bottom: 1px solid #ddd;
-  z-index: 100;
+.Header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 8px 16px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.Header--sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }

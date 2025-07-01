@@ -34,6 +34,7 @@ export const BooksListView = observer(() => {
         >
           All books
         </button>
+
         <button
           style={{ marginLeft: 8 }}
           disabled={booksCtrl.mode === MODE.PRIVATE}
@@ -49,7 +50,7 @@ export const BooksListView = observer(() => {
         </div>
       )}
 
-      {booksCtrl.books.map((b, i) => (
+      {booksCtrl.books && booksCtrl.books.map((b, i) => (
         <div key={i}>
           {b.author}: {b.name}
         </div>
