@@ -1,19 +1,5 @@
 import { API_BASE } from "./config";
-
-function asJsonSafe(res) {
-  return res.status === 204 ? null : res.json();
-};
-
-function check(res) {
-  if (!res.ok) {
-    const err = new Error(`HTTP ${res.status} - ${res.statusText}`);
-    err.status = res.status;
-
-    throw err;
-  }
-
-  return res;
-};
+import { getJsonSafe, checkRequest } from "./utils";
 
 export default class ApiGateway {
   request = async (method, path, payload) => {
@@ -21,9 +7,9 @@ export default class ApiGateway {
       method,
       headers: { "Content-Type": "application/json" },
       body: payload ? JSON.stringify(payload) : null
-    }).then(check);
+    }).then(checkRequest);
 
-    return asJsonSafe(res);
+    return getJsonSafe(res);
   };
 
   get = (path) => this.request("GET", path);

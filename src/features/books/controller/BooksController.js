@@ -1,9 +1,8 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
-import { MODE } from "../../../shared/constants";
+import { MODE, NOTIFICATION_MESSAGES } from "../../../shared/constants";
+import { cleanXSS, sanitizeBooks } from "../../../shared/utils";
 import { booksService } from "../service/BooksService";
-
-const cleanXSS = (str) => str.replace(/[<>]/g, "");
 
 export class BooksController {
   books = [];
@@ -18,9 +17,41 @@ export class BooksController {
 
   setMode = async (newMode) => {
     if (this.mode === newMode) return;
+
     this.mode = newMode;
 
-    await this.fetchAll();
+    await this.fetchData();
+  };
+
+  fetchData = async () => {
+    switch (this.mode) {
+      case MODE.PRIVATE:
+        await this.fetchPrivate();
+        break;
+      default:
+        await this.fetchAll();
+    }
+  };
+
+  fetchPrivate = async () => {
+    this.loading = true;
+    this.error = null;
+
+    try {
+      const privateListData = await booksService.getPrivate();
+
+      runInAction(() => {
+        this.books = sanitizeBooks(privateListData);
+
+        this.privateCount = privateListData.length;
+        this.loading = false;
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.message || NOTIFICATION_MESSAGES.NETWORK_ERROR;
+        this.loading = false;
+      });
+    }
   };
 
   fetchAll = async () => {
@@ -28,27 +59,19 @@ export class BooksController {
     this.error = null;
 
     try {
-      const dataPromise = this.mode === MODE.PRIVATE
-        ? booksService.getPrivate()
-        : booksService.getAll();
-      const privatePromise = booksService.getPrivate();
+      const generalPromisesList = [booksService.getAll(), booksService.getPrivate()];
 
-      const [data, privateList] = await Promise.all([
-        dataPromise,
-        privatePromise
-      ]);
+      const [allListData, privateListData] = await Promise.all(generalPromisesList);
 
       runInAction(() => {
-        this.books = data.map((b) => ({
-          name: cleanXSS(b.name),
-          author: cleanXSS(b.author)
-        }));
-        this.privateCount = privateList.length;
+        this.books = sanitizeBooks(allListData);
+
+        this.privateCount = privateListData.length;
         this.loading = false;
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Network error";
+        this.error = err.message || NOTIFICATION_MESSAGES.NETWORK_ERROR;
         this.loading = false;
       });
     }
@@ -61,7 +84,7 @@ export class BooksController {
 
     try {
       await booksService.add({ name: cleanXSS(name), author: cleanXSS(author) });
-      await this.fetchAll();
+      await this.fetchData();
     } catch (err) {
       runInAction(() => {
         this.error = err.message;
@@ -76,7 +99,7 @@ export class BooksController {
 
     try {
       await booksService.reset();
-      await this.fetchAll();
+      await this.fetchData();
     } catch (err) {
       runInAction(() => {
         this.error = err.message;

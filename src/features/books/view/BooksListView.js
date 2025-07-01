@@ -11,12 +11,14 @@ export const BooksListView = observer(() => {
   const [author, setAuthor] = useState("");
 
   useEffect(() => {
-    booksCtrl.fetchAll();
+    booksCtrl.fetchData();
   }, [booksCtrl]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     booksCtrl.add({ name, author });
+
     setName("");
     setAuthor("");
   };
@@ -25,7 +27,6 @@ export const BooksListView = observer(() => {
 
   return (
     <div style={{ padding: 16 }}>
-      {/* mode switch */}
       <div style={{ marginBottom: 12 }}>
         <button
           disabled={booksCtrl.mode === MODE.ALL}
@@ -48,14 +49,12 @@ export const BooksListView = observer(() => {
         </div>
       )}
 
-      {/* list */}
       {booksCtrl.books.map((b, i) => (
         <div key={i}>
           {b.author}: {b.name}
         </div>
       ))}
 
-      {/* form */}
       <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
         <input
           placeholder="Book name"
