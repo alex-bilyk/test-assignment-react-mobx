@@ -34,6 +34,17 @@ npm install -g npm
 
 ---
 
+## 📦 SSL Notice
+
+The API uses a self-signed certificate.
+
+Open https://tdd.demo.reaktivate.com/api-docs in your browser.
+
+Your browser will warn; click "Proceed / Trust".
+After accepting, the React app can call the endpoints locally.
+
+---
+
 ## 📦 Getting Started
 
 ### 1. Clone the Repository
@@ -59,7 +70,6 @@ Runs the app locally. Port details will appear in the terminal.
 npm run test
 ```
 Runs the tests. Tests details will appear in the terminal.
-
 
 ---
 
